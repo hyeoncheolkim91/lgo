@@ -33,7 +33,10 @@ class App extends Component {
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome Voice2021</h2>
-            <iframe src={this.props.url} />
+          <div className="container"> 
+            <iframe className="responsive-iframe" src={this.props.url} />
+          </div>
+            
           <button
             type="button"
             className="form-submit"
