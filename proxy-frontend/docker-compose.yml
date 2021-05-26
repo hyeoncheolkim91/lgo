@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+    api:
+        container_name: workshop_backend
+        environment: 
+            - "DANGEROUSLY_DISABLE_HOST_CHECK=true"
+        build:
+            context: ./api
+            dockerfile: ./Dockerfile
+        image: "voiceworkshop2021/api-server"
+        networks:
+            - eth
+    ui:
+        container_name: workshop_frontend
+        environment: 
+            - "DANGEROUSLY_DISABLE_HOST_CHECK=true"
+        build:
+            context: ./ui
+            dockerfile: ./Dockerfile
+        image: "voiceworkshop2021/ui"
+        networks:
+            - eth
+    revproxy:
+        container_name: workshop_reverse_proxy
+        build:
+            context: ./reverseProxy
+            dockerfile: ./Dockerfile
+        image: "voiceworkshop2021/reverseproxy"
+        networks:
+            - eth
+        ports:
+            - "80:80"
+networks: 
+    eth:
+

@@ -1,0 +1,17 @@
+{
+  "redirect_base_url": "",
+  "region": "",
+  "users": [
+      {
+          "username": "",
+          "password": "",
+          "ec2": [
+              "",
+              ""
+          ]
+          , 
+          "accessKeyId": "", 
+          "secretAccessKey": ""
+      }
+  ]
+}
