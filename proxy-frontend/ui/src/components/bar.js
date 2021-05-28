@@ -25,12 +25,11 @@ const useStyles = withStyles((theme) =>
     },
   })
 );
-
+const Auth = new AuthService();
 class Bar extends Component {
   constructor() {
     super();
     
-    this.Auth = new AuthService();
   }
 
   handleLogout(e) {

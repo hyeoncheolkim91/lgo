@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
-// import AuthService from "./components/AuthService";
+import AuthService from "./components/AuthService";
 import withAuth from "./components/withAuth";
 import Appbar from "./components/bar"
-
+const Auth = new AuthService();
 class App extends Component {
   constructor() {
     super();
