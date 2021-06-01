@@ -25,17 +25,17 @@ const useStyles = withStyles((theme) =>
     },
   })
 );
-const Auth = new AuthService();
+
 class Bar extends Component {
   constructor() {
     super();
-    
+    this.Auth = new AuthService();
   }
 
   handleLogout(e) {
     this.Auth.logout(this.props.user.username)
       .then((res) => {
-        window.location.reload();
+       this.props.history.replace("/login");
       })
       .catch((err) => {
         alert(err);

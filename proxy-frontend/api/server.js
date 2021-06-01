@@ -53,7 +53,7 @@ app.post("/api/login", (req, res) => {
       token,
     });
 
-    AWS.config.update({ region: MockDB.region, accessKeyId: user.accessKeyId, secretAccessKey: user.secretAccessKey });
+    AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
     const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
     const params = {
       InstanceIds: [],
@@ -83,7 +83,7 @@ app.post("/api/logout", (req, res) => {
 
   var user = MockDB.users.find((u) => username == u.username);
   if (user) {
-    AWS.config.update({ region: MockDB.region, accessKeyId: user.accessKeyId, secretAccessKey: user.secretAccessKey });
+    AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
     const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
     const params = {
       InstanceIds: [],
