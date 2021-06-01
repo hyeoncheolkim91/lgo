@@ -21,14 +21,6 @@ services:
         image: "voiceworkshop2021/ui"
         networks:
             - eth
-    revproxy:
-        container_name: workshop_reverse_proxy
-        build:
-            context: ./reverseProxy
-            dockerfile: ./Dockerfile
-        image: "voiceworkshop2021/reverseproxy"
-        networks:
-            - eth
         ports:
             - "80:80"
 networks: 
