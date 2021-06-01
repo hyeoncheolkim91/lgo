@@ -2,14 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const helmet = require("helmet");
-const cors = require("cors");
+// const cors = require("cors");
 const path = require("path");
-
+const debug = require("debug");
 const jwt = require("jsonwebtoken");
 const exjwt = require("express-jwt");
 const AWS = require("aws-sdk");
 const userData = require('./mockingDB.json')
 
+
+var debugError = debug('error')
+var debugLog = debug("log")
 // Implement middleware
 // Setting up bodyParser to use json and set it to req.body
 app.use(express.json());
@@ -46,10 +49,11 @@ app.post("/api/login", (req, res) => {
       process.env.JWT_SECRET || "advantest",
       { expiresIn: 129600 }
     ); // Sigining the token
+    let url = MockDB.redirect_base_url + "/"+ user.username + "/"
     res.json({
       sucess: true,
       err: null,
-      url: MockDB.redirect_base_url,
+      url: url,
       token,
     });
 
@@ -62,9 +66,11 @@ app.post("/api/login", (req, res) => {
 
     ec2.startInstances(params, function (err, data) {
       if (err) {
-        console.log(err, err.stack); // an error occurred
+        debugger;
+        debugError(err); // an error occurred
       } else {
-        console.log(data); // successful response
+        debugger;
+        debugLog(data); // successful response
       }
     });
   } else {
@@ -75,6 +81,7 @@ app.post("/api/login", (req, res) => {
       url: null,
       err: "Username or password is incorrect",
     });
+    debugError("Username or password is incorrect");
   }
 });
 
@@ -91,9 +98,11 @@ app.post("/api/logout", (req, res) => {
     user.ec2.forEach((x)=> params.InstanceIds.push(x));
     ec2.stopInstances(params, function (err, data) {
       if (err) {
-        console.log(err, err.stack);
+        debugger;
+        debugError(err);
       } else {
-        console.log(data);
+        debugger;
+        debugLog(data);
       }
     });
     res.json({
@@ -101,8 +110,9 @@ app.post("/api/logout", (req, res) => {
     });
   } else {
     res.status(401).json({
-      err: "Username or password is incorrect",
+      err: "logout failed",
     });
+    debugError("logout failed");
   }
 });
 
@@ -111,7 +121,8 @@ app.get("/", jwtMW /* Using the express jwt MW here */, (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  debugger;
+  debugError(err.stack);
   res.status(500).send("Something broke!");
 });
 
@@ -120,6 +131,6 @@ const PORT = process.env.PORT || 80;
 
 // Start express app
 app.listen(PORT, function () {
-  console.log("hi");
-  console.log(`Server is running on: ${PORT}`);
+  debugger;
+  debugLog(`Server is running on: ${PORT}`);
 });

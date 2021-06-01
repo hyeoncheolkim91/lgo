@@ -35,7 +35,7 @@ class Bar extends Component {
   handleLogout(e) {
     this.Auth.logout(this.props.user.username)
       .then((res) => {
-       this.props.history.replace("/login");
+        window.location.reload();
       })
       .catch((err) => {
         alert(err);

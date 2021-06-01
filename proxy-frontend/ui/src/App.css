@@ -13,8 +13,8 @@
 .container {
   position: relative;
   overflow: hidden;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: calc(100vh - 64px);
   padding-top: 60.25%; 
 }
 .brstyle {
@@ -33,7 +33,7 @@
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 800px;
+  height: calc(100vh - 64px);
 }
 
 .App-header {

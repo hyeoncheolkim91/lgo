@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Login from './components/Login'
-document.title = "Voice2021 Demo"
+document.title = "VOICE 2021 - ACS Edge Workshop"
 ReactDOM.render(
   <Router>
-          <Route exact path="/" component={App} />
-          <Route exact path="/login" component={Login} />
+    <div>
+      <Route exact path="/" component={App} />
+      <Route exact path="/login" component={Login} />
+    </div>
   </Router>
   , document.getElementById('root')
 );

@@ -1,17 +1,16 @@
 {
-  "redirect_base_url": "",
-  "region": "",
-  "users": [
-      {
-          "username": "",
-          "password": "",
-          "ec2": [
-              "",
-              ""
-          ]
-          , 
-          "accessKeyId": "", 
-          "secretAccessKey": ""
-      }
-  ]
-}
+    "redirect_base_url": "",
+    "region": "us--1",
+    "accessKeyId": "", 
+    "secretAccessKey": "",
+    "users": [
+        {
+            "username": "",
+            "password": "",
+            "ec2": [
+                "",
+                ""
+            ]            
+        }
+    ]
+  }
