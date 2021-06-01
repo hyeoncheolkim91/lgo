@@ -11,5 +11,5 @@ COPY . /app
 
 RUN npm ci --loglevel verbose
 EXPOSE 80
-CMD [ "node", "server.js" ]
+CMD ["DEBUG=*", "node", "server.js" ]
 # CMD ["node-inspect", "server.js"] debug mode

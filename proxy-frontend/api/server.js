@@ -49,7 +49,7 @@ app.post("/api/login", (req, res) => {
       process.env.JWT_SECRET || "advantest",
       { expiresIn: 129600 }
     ); // Sigining the token
-    let url = MockDB.redirect_base_url + "/"+ user.username + "/"
+    let url = MockDB.redirect_base_url + user.username + "/"
     res.json({
       sucess: true,
       err: null,
