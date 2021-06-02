@@ -51,6 +51,7 @@ app.post("/api/login", (req, res) => {
     ); // Sigining the token
     let url = MockDB.redirect_base_url + user.username + "/"
     res.json({
+      status: 200,
       sucess: true,
       err: null,
       url: url,
@@ -75,10 +76,9 @@ app.post("/api/login", (req, res) => {
     });
   } else {
     // User credentials did not match (are not valid) or no user with this username/password exists
-    res.status(401).json({
+    res.json({
+      status:401,
       sucess: false,
-      token: null,
-      url: null,
       err: "Username or password is incorrect",
     });
     debugError("Username or password is incorrect");
@@ -109,7 +109,9 @@ app.post("/api/logout", (req, res) => {
       sucess: true,
     });
   } else {
-    res.status(401).json({
+    res.json({
+      status:401,
+      sucess: false,
       err: "logout failed",
     });
     debugError("logout failed");

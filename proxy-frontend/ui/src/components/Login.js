@@ -67,12 +67,18 @@ handleClose(event, reason){
     e.preventDefault();
     this.Auth.login(this.state.username, this.state.password)
       .then((res) => {
-        console.log(this.state.username, this.state.password)
-        this.props.history.replace("/");
+        if(res.status == 200){
+          this.props.history.replace("/");
+        }else{
+          console.log(res)
+          this.setState({
+            alert:{ open: true, message:res.err, type:"error"}
+        });
+        }      
       })
       .catch((err) => {
         this.setState({
-          alert:{ open: true, message:err.message, type:"error"}
+          alert:{ open: true, message:err.response.statusText, type:"error"}
       });
   })
 }

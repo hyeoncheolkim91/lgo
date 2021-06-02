@@ -33,6 +33,7 @@ export default class AuthService {
       // Clear user token and profile data from localStorage
       localStorage.removeItem("id_token");
       localStorage.removeItem("url");
+      return Promise.resolve(res);
     });
   }
 

@@ -33,9 +33,11 @@ class Bar extends Component {
   }
 
   handleLogout(e) {
+    e.preventDefault()
     this.Auth.logout(this.props.user.username)
       .then((res) => {
         window.location.reload();
+        
       })
       .catch((err) => {
         alert(err);
