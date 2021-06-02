@@ -70,10 +70,11 @@ handleClose(event, reason){
         if(res.status == 200){
           this.props.history.replace("/");
         }else{
-          console.log(res)
+          this.props.history.replace("/");  
           this.setState({
             alert:{ open: true, message:res.err, type:"error"}
         });
+        
         }      
       })
       .catch((err) => {
