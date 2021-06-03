@@ -3,15 +3,19 @@ import "./Login.css";
 import AuthService from "./AuthService";
 import logo from "../AdvantestLogo.png";
 import Alert from "./alert"
+import { Redirect } from "react-router-dom";
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoggedIn: false,
+      username:"",
+      password:"",
       alert:{
       open: false,
-      type: null,
-      message: null
-
+      type: "",
+      message: ""
+      
     }
   };
     this.handleClose = this.handleClose.bind(this);
@@ -19,10 +23,16 @@ class Login extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.Auth = new AuthService();
   }
-  componentWillMount() {
-    if (this.Auth.loggedIn()) this.props.history.replace("/");
-  }
+  // componentWillMount() {
+  //   if (this.Auth.loggedIn()){
+  //     this.state.isLoggedIn = true;
+  
+  //   }
+  // }
   render() {
+    if(this.state.isLoggedIn){
+      return <Redirect to ="/" />
+    }
     return (
       <div>
       <Alert message={this.state.alert.message} open = {this.state.alert.open} type={this.state.alert.type} handleClose={this.handleClose}></Alert>
@@ -68,9 +78,9 @@ handleClose(event, reason){
     this.Auth.login(this.state.username, this.state.password)
       .then((res) => {
         if(res.status == 200){
-          this.props.history.replace("/");
-        }else{
-          this.props.history.replace("/");  
+          localStorage.setItem("username", this.state.username);
+          this.setState({isLoggedIn:true})
+        }else{  
           this.setState({
             alert:{ open: true, message:res.err, type:"error"}
         });
@@ -82,6 +92,7 @@ handleClose(event, reason){
           alert:{ open: true, message:err.response.statusText, type:"error"}
       });
   })
+  
 }
 
   handleChange(e) {

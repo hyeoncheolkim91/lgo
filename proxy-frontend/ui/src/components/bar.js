@@ -6,8 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import logo from "../AdvantestLogo.png";
 import AuthService from "./AuthService";
-import withAuth from "./withAuth";
 
+import { Redirect } from "react-router-dom";
 const useStyles = withStyles((theme) =>
   createStyles({
     root: {
@@ -27,26 +27,36 @@ const useStyles = withStyles((theme) =>
 );
 
 class Bar extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      islogout: false
+    };
     this.Auth = new AuthService();
   }
 
   handleLogout(e) {
     e.preventDefault()
-    this.Auth.logout(this.props.user.username)
+    
+    this.Auth.logout(localStorage.getItem("username"))
       .then((res) => {
-        window.location.reload();
+        this.setState({
+          islogout: true
+        })
         
       })
       .catch((err) => {
-        alert(err);
+        this.setState({
+          islogout: true
+        })
       });
   }
 
 
   render() {
-
+    if (this.state.islogout) {
+      return <Redirect to="/login" />;
+    }
     const classes = useStyles
     return (
       <div className={classes.root}>
@@ -82,4 +92,4 @@ class Bar extends Component {
   }
 }
 
-export default withAuth(Bar);
+export default Bar;
