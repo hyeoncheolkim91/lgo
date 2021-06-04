@@ -126,11 +126,7 @@ app.post("/api/login", (req, res) => {
     user.ecids.forEach((x) => params.InstanceIds.push(x.split('/')[1]));
 
     ec2.startInstances(params, function (err, data) {
-      if (err) {
-        debugger;
-        debugError(err);
-        console.debug(err) // an error occurred
-      } else {
+      if (!err) {
         debugger;
         debugLog(data); // successful response
         return res.json({
@@ -138,6 +134,25 @@ app.post("/api/login", (req, res) => {
           success: true,
           err: null,
           url: url,
+        });
+        
+      }else if(err.code=="IncorrectInstanceState"){
+        return res.json({
+          status: 200,
+          success: true,
+          err: null,
+          url: url,
+        });
+      }
+       else {
+        debugger;
+        debugError(err);
+        console.debug(err)
+        return res.json({
+          status: 400,
+          success: false,
+          err: err.code
+
         });
       }
     });
