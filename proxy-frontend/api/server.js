@@ -85,21 +85,6 @@ app.post("/api/checkinstance", (req, res) => {
               msg: "initializing instances...",
             });
           }
-          // } else if (
-          //   (data.InstanceStatuses[0].InstanceState.Code == 64 ||
-          //   80) ||
-          //   (data.InstanceStatuses[1].InstanceState.Code == 64 ||
-          //   80)
-          // ) {
-
-          // } else {
-          //   res.json({
-          //     status: 200,
-          //     ready: false,
-          //     err: null,
-          //     msg: "initializing instances...",
-          //   });
-          // }
         } else {
           ec2.startInstances(params, function (err, data) {
             if (err) {
@@ -143,12 +128,7 @@ app.post("/api/login", (req, res) => {
     // User credentials matched (are valid)
     // Sigining the token
     let url = MockDB.redirect_base_url + user.username + "/";
-    res.json({
-      status: 200,
-      success: true,
-      err: null,
-      url: url,
-    });
+   
 
     AWS.config.update({
       region: MockDB.region,
@@ -169,11 +149,17 @@ app.post("/api/login", (req, res) => {
       } else {
         debugger;
         debugLog(data); // successful response
+        return res.json({
+          status: 200,
+          success: true,
+          err: null,
+          url: url,
+        });
       }
     });
   } else {
     // User credentials did not match (are not valid) or no user with this username/password exists
-    res.json({
+    return res.json({
       status: 401,
       success: false,
       err: "Username or password is incorrect",
