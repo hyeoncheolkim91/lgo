@@ -116,7 +116,7 @@ class Login extends Component {
                   }))
                 }
             })
-          }, 5000)
+          }, 8000)
         }else{  
           this.setState({
             loading:false,
