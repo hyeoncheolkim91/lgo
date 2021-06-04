@@ -40,8 +40,8 @@ app.post("/api/checkinstance", (req, res) => {
   if (user) {
     AWS.config.update({
       region: MockDB.region,
-      accessKeyId: MockDB.accessKeyId,
-      secretAccessKey: MockDB.secretAccessKey,
+      accessKeyId: MockDB.access_key,
+      secretAccessKey: MockDB.secret_key,
     });
     const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
     const params = {
@@ -152,8 +152,8 @@ app.post("/api/login", (req, res) => {
 
     AWS.config.update({
       region: MockDB.region,
-      accessKeyId: MockDB.accessKeyId,
-      secretAccessKey: MockDB.secretAccessKey,
+      accessKeyId: MockDB.access_key,
+      secretAccessKey: MockDB.secret_key,
     });
     const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
     const params = {
