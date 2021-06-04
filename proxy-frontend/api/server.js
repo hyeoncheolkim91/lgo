@@ -61,36 +61,25 @@ app.post("/api/checkinstance", (req, res) => {
         });
       } else {
         debugger;
-        if (data.InstanceStatuses.length == 2) {
-          if (
-            data.InstanceStatuses[0].InstanceState.Code == 16 &&
-            data.InstanceStatuses[1].InstanceState.Code == 16
-          ) {
-            let token = jwt.sign(
-              { username: user.username },
-              process.env.JWT_SECRET || "advantest",
-              { expiresIn: 129600 }
-            );
-            return res.json({
-              status: 200,
-              ready: true,
-              msg: "ready",
-              token,
-            });
-          } else {
-            return res.json({
-              status: 200,
-              ready: false,
-              err: null,
-              msg: "initializing instances...",
-            });
-          }
+        if (data.InstanceStatuses.length == 2 &&  data.InstanceStatuses[0].InstanceState.Code == 16 &&  data.InstanceStatuses[1].InstanceState.Code == 16) {
+            let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET || "advantest", { expiresIn: 129600 });
+              return res.json({
+                status: 200,
+                ready: true,
+                msg: "ready",
+                token,
+              });      
         } else {
           ec2.startInstances(params, function (err, data) {
             if (err) {
               debugger;
               debugError(err); // an error occurred
               console.debug(err)
+              return res.json({
+                status: 200,
+                err: true,
+                msg: "Error occured while loading instances.",
+              });
             } else {
               debugger;
               debugLog(data)  // successful response
@@ -100,11 +89,6 @@ app.post("/api/checkinstance", (req, res) => {
                 msg: "initializing instances...",
               });;
             }
-          });
-          return res.json({
-            status: 200,
-            ready: false,
-            msg: "initializing instances...",
           });
         }
       }
@@ -128,7 +112,7 @@ app.post("/api/login", (req, res) => {
     // User credentials matched (are valid)
     // Sigining the token
     let url = MockDB.redirect_base_url + user.username + "/";
-   
+  
 
     AWS.config.update({
       region: MockDB.region,
@@ -159,12 +143,13 @@ app.post("/api/login", (req, res) => {
     });
   } else {
     // User credentials did not match (are not valid) or no user with this username/password exists
+    debugError("Username or password is incorrect");
     return res.json({
       status: 401,
       success: false,
       err: "Username or password is incorrect",
     });
-    debugError("Username or password is incorrect");
+   
   }
 });
 
