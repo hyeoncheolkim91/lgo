@@ -18,13 +18,14 @@ export default class AuthService {
       }),
     }).then((res) => {
       this.setUrl(res.url);
-      this.setToken(res.token);
+     
       return Promise.resolve(res);
-    });
+    }).catch((err)=>{
+      return Promise.resolve(err);
+    })
   }
 
-  logout(username) {
-    
+  logout(username) {  
     return this.fetch(`${this.domain}/logout`, {
       method: "POST",
       body: JSON.stringify({
@@ -35,9 +36,29 @@ export default class AuthService {
       localStorage.removeItem("id_token");
       localStorage.removeItem("url");
       localStorage.removeItem("username");
-    });
+      return Promise.resolve(res);
+    }).catch((err)=>{
+      localStorage.removeItem("id_token");
+      localStorage.removeItem("url");
+      localStorage.removeItem("username");
+      return Promise.resolve(err);
+    })
   }
-
+  checkEC2Status(username){
+    return this.fetch(`${this.domain}/checkinstance`, {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+      }),
+    }).then((res) => {
+      if(res.ready == true){
+        this.setToken(res.token);
+      }
+      return Promise.resolve(res);
+    }).catch((err)=>{
+      return Promise.resolve(err);
+    })
+  }
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();

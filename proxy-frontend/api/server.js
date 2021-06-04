@@ -35,6 +35,75 @@ const jwtMW = exjwt({
 // Add user info into mockingDB file.
 let MockDB = userData;
 
+app.post("/api/checkinstance", (req, res)=>{
+  const {username} = req.body;
+  var user = MockDB.users.find((u) => username == u.username);
+  if (user) {
+    AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
+    const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
+    const params = {
+      InstanceIds: [],
+    };
+    user.ec2.forEach((x)=> params.InstanceIds.push(x));
+
+    ec2.describeInstanceStatus(params, function (err, data) {
+      if (err) {
+        debugger;
+        debugError(err); // an error occurred
+        res.json({
+          status: 200,
+          err:true,
+          msg: "Error occured while loading instances.",
+        });
+      } else {
+        debugger;
+        if(data.InstanceStatuses.length == 2)
+        {
+            if(data.InstanceStatuses[0].InstanceState.Code == 16 && 
+              data.InstanceStatuses[0].InstanceStatus.Status == "ok" &&
+              data.InstanceStatuses[1].InstanceState.Code == 16 && 
+              data.InstanceStatuses[1].InstanceStatus.Status == "ok")
+              {  
+                let token = jwt.sign(
+                  {username: user.username },
+                  process.env.JWT_SECRET || "advantest",
+                  { expiresIn: 129600 }
+                ); 
+                res.json({
+                  status: 200,
+                  ready: true,
+                  msg: "ready",
+                  token,
+                  
+                });
+              }else
+              {
+                res.json({
+                  status: 200,
+                  ready: false,
+                  err: null,
+                  msg:"initializing instances..."
+                });
+              }
+        }
+        else
+        {
+          res.json({
+            status: 200,
+            ready: false,
+            msg:"initializing instances..."
+          });
+        }  
+      }
+    });
+  }else {
+    res.json({
+      status:200,
+      ready: false,
+      msg:"User does not exists."
+    });
+  }
+})
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -44,18 +113,14 @@ app.post("/api/login", (req, res) => {
   );
   if (user) {
     // User credentials matched (are valid)
-    let token = jwt.sign(
-      { id: user.id, username: user.username },
-      process.env.JWT_SECRET || "advantest",
-      { expiresIn: 129600 }
-    ); // Sigining the token
+    // Sigining the token
     let url = MockDB.redirect_base_url + user.username + "/"
     res.json({
       status: 200,
-      sucess: true,
+      success: true,
       err: null,
       url: url,
-      token,
+     
     });
 
     AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
@@ -78,7 +143,7 @@ app.post("/api/login", (req, res) => {
     // User credentials did not match (are not valid) or no user with this username/password exists
     res.json({
       status:401,
-      sucess: false,
+      success: false,
       err: "Username or password is incorrect",
     });
     debugError("Username or password is incorrect");
@@ -90,34 +155,34 @@ app.post("/api/logout", (req, res) => {
 
   var user = MockDB.users.find((u) => username == u.username);
   if (user) {
-    AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
-    const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
-    const params = {
-      InstanceIds: [],
-    };
-    user.ec2.forEach((x)=> params.InstanceIds.push(x));
-    ec2.stopInstances(params, function (err, data) {
-      if (err) {
-        debugger;
-        debugError(err);
-      } else {
-        debugger;
-        debugLog(data);
-      }
-    });
+    // AWS.config.update({ region: MockDB.region, accessKeyId: MockDB.accessKeyId, secretAccessKey: MockDB.secretAccessKey });
+    // const ec2 = new AWS.EC2({ apiVersion: "2016-11-15" });
+    // const params = {
+    //   InstanceIds: [],
+    // };
+    // user.ec2.forEach((x)=> params.InstanceIds.push(x));
+    // ec2.stopInstances(params, function (err, data) {
+    //   if (err) {
+    //     debugger;
+    //     debugError(err);
+    //   } else {
+    //     debugger;
+    //     debugLog(data);
+    //   }
+    // });
     res.json({
-      sucess: true,
+      success: true,
     });
   } else {
     res.json({
       status:401,
-      sucess: false,
+      success: false,
       err: "logout failed",
     });
     debugError("logout failed");
   }
 });
-
+app.get("/api/")
 app.get("/", jwtMW /* Using the express jwt MW here */, (req, res) => {
   res.send("You are authenticated");
 });

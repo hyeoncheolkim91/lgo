@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -13,7 +13,7 @@ const useStyles = withStyles((theme) =>
     root: {
       flexGrow: 2,
     },
-    appbar:{
+    appbar: {
       minHeight: 64
     },
     menuButton: {
@@ -37,13 +37,13 @@ class Bar extends Component {
 
   handleLogout(e) {
     e.preventDefault()
-    
+
     this.Auth.logout(localStorage.getItem("username"))
       .then((res) => {
         this.setState({
           islogout: true
         })
-        
+
       })
       .catch((err) => {
         this.setState({
@@ -60,34 +60,34 @@ class Bar extends Component {
     const classes = useStyles
     return (
       <div className={classes.root}>
-      <AppBar position="static" color="inherit">
-        <Toolbar className={classes.appbar} >
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-           
-          >
-            <img src={logo} alt="advantest" className={classes.logo} />
+        <AppBar position="static" color="inherit">
+          <Toolbar className={classes.appbar} >
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
 
-            <Button
-                onClick={this.handleLogout.bind(this)}
-              style={{
-                borderRadius: 20,     
-                fontWeight:'bold',
-                color: "#8E0041",
-                fontSize: "18px",
-                marginRight:'10px'
-              }}
-              variant="text"
             >
-              Logout
+              <img src={logo} alt="advantest" className={classes.logo} />
+
+              <Button
+                onClick={this.handleLogout.bind(this)}
+                style={{
+                  borderRadius: 20,
+                  fontWeight: 'bold',
+                  color: "#8E0041",
+                  fontSize: "18px",
+                  marginRight: '10px'
+                }}
+                variant="text"
+              >
+                Log Out
             </Button>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </div>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+      </div>
     );
   }
 }
