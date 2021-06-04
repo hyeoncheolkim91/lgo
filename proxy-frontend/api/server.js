@@ -54,7 +54,7 @@ app.post("/api/checkinstance", (req, res) => {
         debugger;
         debugError(err); 
         console.debug(err)
-        res.json({
+        return res.json({
           status: 200,
           err: true,
           msg: "Error occured while loading instances.",
@@ -71,14 +71,14 @@ app.post("/api/checkinstance", (req, res) => {
               process.env.JWT_SECRET || "advantest",
               { expiresIn: 129600 }
             );
-            res.json({
+            return res.json({
               status: 200,
               ready: true,
               msg: "ready",
               token,
             });
           } else {
-            res.json({
+            return res.json({
               status: 200,
               ready: false,
               err: null,
@@ -94,14 +94,14 @@ app.post("/api/checkinstance", (req, res) => {
             } else {
               debugger;
               debugLog(data)  // successful response
-              res.json({
+              return res.json({
                 status: 200,
                 ready: false,
                 msg: "initializing instances...",
               });;
             }
           });
-          res.json({
+          return res.json({
             status: 200,
             ready: false,
             msg: "initializing instances...",
@@ -110,7 +110,7 @@ app.post("/api/checkinstance", (req, res) => {
       }
     });
   } else {
-    res.json({
+    return res.json({
       status: 200,
       ready: false,
       msg: "User does not exists.",
@@ -188,11 +188,11 @@ app.post("/api/logout", (req, res) => {
     //     debugLog(data);
     //   }
     // });
-    res.json({
+    return res.json({
       success: true,
     });
   } else {
-    res.json({
+    return res.json({
       status: 401,
       success: false,
       err: "logout failed",
