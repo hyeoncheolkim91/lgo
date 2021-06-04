@@ -50,7 +50,7 @@ app.post("/api/checkinstance", (req, res) => {
     user.ecids.forEach((x) => params.InstanceIds.push(x.split("/")[1]));
 
     ec2.describeInstanceStatus(params, function (err, data) {
-      if (!err) {
+      if (err) {
         debugger;
         debugError(err);
         console.debug(err);
@@ -150,6 +150,7 @@ app.post("/api/login", (req, res) => {
           url: url,
         });
       } else if (err.code == "IncorrectInstanceState") {
+        debugLog(err); // successful response
         return res.json({
           status: 200,
           success: true,
