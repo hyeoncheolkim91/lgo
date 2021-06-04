@@ -47,13 +47,13 @@ app.post("/api/checkinstance", (req, res) => {
     const params = {
       InstanceIds: [],
     };
-    user.ecids.forEach((x) => params.InstanceIds.push(x.split('/')[1]));
+    user.ecids.forEach((x) => params.InstanceIds.push(x.split("/")[1]));
 
     ec2.describeInstanceStatus(params, function (err, data) {
-      if (err) {
+      if (!err) {
         debugger;
-        debugError(err); 
-        console.debug(err)
+        debugError(err);
+        console.debug(err);
         return res.json({
           status: 200,
           err: true,
@@ -61,33 +61,48 @@ app.post("/api/checkinstance", (req, res) => {
         });
       } else {
         debugger;
-        if (data.InstanceStatuses.length == 2 &&  data.InstanceStatuses[0].InstanceState.Code == 16 &&  data.InstanceStatuses[1].InstanceState.Code == 16) {
-            let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET || "advantest", { expiresIn: 129600 });
-              return res.json({
-                status: 200,
-                ready: true,
-                msg: "ready",
-                token,
-              });      
+        if (
+          data.InstanceStatuses.length == 2 &&
+          data.InstanceStatuses[0].InstanceState.Code == 16 &&
+          data.InstanceStatuses[1].InstanceState.Code == 16
+        ) {
+          let token = jwt.sign(
+            { username: user.username },
+            process.env.JWT_SECRET || "advantest",
+            { expiresIn: 129600 }
+          );
+          return res.json({
+            status: 200,
+            ready: true,
+            msg: "ready",
+            token,
+          });
         } else {
           ec2.startInstances(params, function (err, data) {
-            if (err) {
+            if (!err) {
               debugger;
-              debugError(err); // an error occurred
-              console.debug(err)
-              return res.json({
-                status: 200,
-                err: true,
-                msg: "Error occured while loading instances.",
-              });
-            } else {
-              debugger;
-              debugLog(data)  // successful response
+              debugLog(data); // successful response
               return res.json({
                 status: 200,
                 ready: false,
                 msg: "initializing instances...",
-              });;
+              });
+            } else if (err.code == "IncorrectInstanceState") {
+              return res.json({
+                status: 200,
+                ready: false,
+                err: false,
+                msg: "Instance is in Incorrect state. Restarting now...",
+              });
+            } else {
+              debugger;
+              debugError(err); // an error occurred
+              console.debug(err);
+              return res.json({
+                status: 400,
+                err: true,
+                msg: "Error occured while loading instances.",
+              });
             }
           });
         }
@@ -112,7 +127,6 @@ app.post("/api/login", (req, res) => {
     // User credentials matched (are valid)
     // Sigining the token
     let url = MockDB.redirect_base_url + user.username + "/";
-  
 
     AWS.config.update({
       region: MockDB.region,
@@ -123,7 +137,7 @@ app.post("/api/login", (req, res) => {
     const params = {
       InstanceIds: [],
     };
-    user.ecids.forEach((x) => params.InstanceIds.push(x.split('/')[1]));
+    user.ecids.forEach((x) => params.InstanceIds.push(x.split("/")[1]));
 
     ec2.startInstances(params, function (err, data) {
       if (!err) {
@@ -135,24 +149,21 @@ app.post("/api/login", (req, res) => {
           err: null,
           url: url,
         });
-        
-      }else if(err.code=="IncorrectInstanceState"){
+      } else if (err.code == "IncorrectInstanceState") {
         return res.json({
           status: 200,
           success: true,
           err: null,
           url: url,
         });
-      }
-       else {
+      } else {
         debugger;
         debugError(err);
-        console.debug(err)
+        console.debug(err);
         return res.json({
           status: 400,
           success: false,
-          err: err.code
-
+          err: err.code,
         });
       }
     });
@@ -164,7 +175,6 @@ app.post("/api/login", (req, res) => {
       success: false,
       err: "Username or password is incorrect",
     });
-   
   }
 });
 
@@ -192,13 +202,12 @@ app.post("/api/logout", (req, res) => {
       success: true,
     });
   } else {
+    debugError("logout failed");
     return res.json({
       status: 401,
       success: false,
       err: "logout failed",
     });
-    
-    debugError("logout failed");
   }
 });
 app.get("/api/");
@@ -209,7 +218,7 @@ app.get("/", jwtMW /* Using the express jwt MW here */, (req, res) => {
 app.use((err, req, res, next) => {
   debugger;
   debugError(err.stack);
-  console.debug(err)
+  console.debug(err);
   res.status(500).send("Something broke!");
 });
 
