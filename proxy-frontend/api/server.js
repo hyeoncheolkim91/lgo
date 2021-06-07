@@ -24,7 +24,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(express.static(path.join(__dirname, "../ui/build")));
+app.use(express.static(path.join(__dirname, "build")));
 // INstantiating the express-jwt middleware. Create .env file to set env variables Like JWT secret, Port.
 const jwtMW = exjwt({
   secret: process.env.JWT_SECRET || "advantest",
@@ -212,7 +212,7 @@ app.post("/api/logout", (req, res) => {
   }
 });
 app.get("/", jwtMW /* Using the express jwt MW here */, (req, res) => {
-  res.sendFile(path.join(__dirname, '../ui/build/index.html'));
+  res.send("You are authenticated");
 });
 
 app.use((err, req, res, next) => {

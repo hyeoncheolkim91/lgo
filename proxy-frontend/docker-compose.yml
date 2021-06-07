@@ -18,7 +18,7 @@ services:
     api:
         container_name: workshop_backend
         build:
-            context: ./
+            context: ./api
             dockerfile: ./Dockerfile
         image: "voiceworkshop2021/api-server"
         labels:
@@ -28,3 +28,15 @@ services:
             - "traefik.http.routers.api.service=api"
             - "traefik.http.services.api.loadbalancer.server.port=80"
 
+    ui:
+        container_name: workshop_frontend
+        build:
+            context: ./ui
+            dockerfile: ./Dockerfile
+        image: "voiceworkshop2021/ui"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.ui.rule=PathPrefix(`/`)"
+            - "traefik.http.routers.ui.entrypoints=web"
+            - "traefik.http.routers.ui.service=ui"
+            - "traefik.http.services.ui.loadbalancer.server.port=80"

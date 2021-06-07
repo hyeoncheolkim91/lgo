@@ -26,7 +26,14 @@ export default function withAuth(AuthComponent) {
                 }
                 catch(err){
                     Auth.logout(localStorage.getItem("username"))
-                    this.props.history.replace('/login')
+                    .then((res) => {
+                        this.props.history.replace('/login')
+                
+                      })
+                      .catch((err) => {
+                        this.props.history.replace('/login')
+                      });
+                    
                 }
             }
         }
