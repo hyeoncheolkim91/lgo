@@ -1,21 +1,22 @@
-FROM node:12.18.3-alpine as builder
+FROM node:12.18.3-alpine
 
 LABEL version="1.0"
 LABEL description="Voice workshop 2021 login UI"
 LABEL maintainer = ["jason.kim@advantest.com"]
 
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-COPY . /app
-RUN npm ci --loglevel verbose
 
-RUN npm run build
+COPY ["package.json", "package-lock.json", "./"]
 
-FROM nginx:stable-alpine
+RUN npm install --production
 
-COPY --from=builder /app/build /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
+COPY . .
+
+RUN npm install
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD [ "npm", "start" ]
+
+
+
