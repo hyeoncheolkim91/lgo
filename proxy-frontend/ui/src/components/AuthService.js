@@ -6,6 +6,8 @@ export default class AuthService {
     this.login = this.login.bind(this);
     this.getProfile = this.getProfile.bind(this);
     this.url = this.getUrl.bind(this);
+    this.logout = this.logout.bind(this);
+    this.checkEC2Status = this.checkEC2Status.bind(this);
   }
 
   login(username, password) {
