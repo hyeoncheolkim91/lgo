@@ -39,5 +39,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "/api"
+  "proxy": "http://api:80/api"
 }

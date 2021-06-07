@@ -9,6 +9,8 @@ services:
             context: ./api
             dockerfile: ./Dockerfile
         image: "voiceworkshop2021/api-server"
+        ports:
+            - "80:80"
         networks:
             - eth
     ui:
