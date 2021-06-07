@@ -18,7 +18,7 @@ services:
     api:
         container_name: workshop_backend
         build:
-            context: ./api
+            context: ./
             dockerfile: ./Dockerfile
         image: "voiceworkshop2021/api-server"
         labels:
