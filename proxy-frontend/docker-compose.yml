@@ -11,8 +11,6 @@ services:
         image: "voiceworkshop2021/api-server"
         ports:
             - "80:80"
-        networks:
-            - eth
     ui:
         container_name: workshop_frontend
         environment: 
@@ -21,10 +19,8 @@ services:
             context: ./ui
             dockerfile: ./Dockerfile
         image: "voiceworkshop2021/ui"
-        networks:
-            - eth
+
         ports:
             - "80:80"
-networks: 
-    eth:
+
 
