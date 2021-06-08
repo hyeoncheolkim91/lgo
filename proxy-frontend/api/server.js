@@ -148,6 +148,7 @@ app.post("/api/login", (req, res) => {
           success: true,
           err: null,
           url: url,
+          msg: "Loading Session"
         });
       } else if (err.code == "IncorrectInstanceState") {
         debugLog(err); // successful response

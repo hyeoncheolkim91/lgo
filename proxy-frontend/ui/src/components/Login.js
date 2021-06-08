@@ -103,6 +103,9 @@ class Login extends Component {
     this.Auth.login(this.state.username, this.state.password)
       .then((res) => {
         if(res.status == 200){
+          this.setState(prevState=>({
+            ...prevState, message: res.msg
+          }))
           localStorage.setItem("username", this.state.username);          
           var ec2Ready = setInterval(()=>{
             this.Auth.checkEC2Status(this.state.username)
